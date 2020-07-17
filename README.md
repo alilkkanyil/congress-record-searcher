@@ -1,6 +1,6 @@
 # Congressional Records Scraper
-This is a python script meant to crawl through U.S. congress website "congress.gov"'s house of representatives and congressional records.
-It takes keywords or sentences from the user and a period in which the scraping will be done. The script is meant to allow the user to search when specific topics, laws, etc. has been discussed in senate or house of representatives meetings.
+This is a python script meant to crawl through U.S. congress website's ("congress.gov") house of representatives and senate congressional records.
+It takes keywords or sentences and a range of dates from the user and scrapes based on those parameters. The script is meant to allow the user to search when specific topics, laws, etc. have been discussed in the senate or house of representatives.
 
 # Requirements
 BeautifulSoup 4 (bs4)
