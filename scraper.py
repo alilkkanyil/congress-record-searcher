@@ -128,9 +128,9 @@ while(repeat):
                     # Else, prints page.
                     else:
                         lines2 = soup2.find('pre', class_='styled')
-                        if(word in lines2):
+                        lines3 = str(lines2)
+                        if(word in lines3):
                             print("Found in: " + record)
-                        # print(lines2)
                         page = page + 1
 
 #####################################################################
