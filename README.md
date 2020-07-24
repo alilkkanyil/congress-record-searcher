@@ -3,10 +3,10 @@ This is a python script meant to crawl through U.S. congress website's ("congres
 It currently takes keywords or sentences and a range of dates from the user and scrapes based on those parameters. The script is meant to allow the user to search when specific topics, laws, etc. have been discussed in the senate or house of representatives.
 
 # Requirements
-BeautifulSoup 4 (bs4)
-urllib
-requests library
-python 3.x
+* BeautifulSoup 4 (bs4)
+* urllib
+* requests library
+* python 3.x
 
 # Instructions
 When prompted, provide beginning and end date (YYYY/MM/DD) in integer values for the search.
