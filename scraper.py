@@ -3,17 +3,17 @@
 # for text searches on every congressional record.
 # Currently scrapes the html page of a given date,
 # Displays the list of congressional records for that date.
-# Last updated: 07.24.20, by Ali Yildirim
+# Last updated: 07.31.20, by Ali Yildirim
 
 #####################################################################
 # TODO: Separate the code into functions, clean the code
-# TODO: Add inbuilt word list and multi-word search
-# TODO: Optimize page crawling
 # TODO: Save found pages to a file
 #####################################################################
 
 from bs4 import BeautifulSoup
 import requests
+
+matchList = ["unanimous consent", "ask consent", "request consent", "ask unanimous consent", "request unanimous consent", "ask Unanimous Consent", "request Unanimous Consent", "without objection", "without objection, it is so ordered", "without objection it is so ordered", "without objection so ordered"]
 
 # Whether or not a new search will be made
 repeat = True
@@ -32,8 +32,6 @@ while(repeat):
     year2 = input("Enter end year: ")
     day2 = input("Enter end day (numeric value): ")
     month2 = input("Enter end month (numeric value): ")
-
-    word = input("Enter a word to be searched: ")
 #####################################################################
 #Int conversion of the variables as python takes string inputs
 #####################################################################
@@ -88,27 +86,26 @@ while(repeat):
 # If found value is True, it'll print "No data available."
 ##################################################################### 
     
+        pageList = []
         if(found == False):   
             iterator = 1
             print("No.\tPage Number\n")
             for article in lines.find_all('td'):
-                if(iterator % 2 != 0):
-                    print(article.text)
-                    print()
+                if(iterator % 2 != 1):
+                    pageList.append(str(article.text))
                 iterator = iterator + 1
             
-            iterator = iterator - 1
-            for x in range (iterator//2):
-                # Entry number user has selected
-                selection = links[(int(x)*3-3)]['href']
-                # Testing purposes only
-                # print(selection)
+            pageList = list(dict.fromkeys(pageList))
+            print(pageList)
 
+            iterator = iterator - 1
+            for x in range (len(pageList)):
                 #####################################################################
                 # Selects a page to process
                 #####################################################################
                 # Page number of the record
-                page = int(selection[-1])
+                page = 1
+                recordPage = pageList[x]
                 endOfPage = False
                 
                 #####################################################################
@@ -116,8 +113,7 @@ while(repeat):
                 #####################################################################                
                 while(endOfPage == False):
                     # Record link + page
-                    record = "https://www.congress.gov" + selection[:-1] + str(page)
-                    # print(record)
+                    record = "https://www.congress.gov/congressional-record/" + str(year3) + "/" + str(month3) + "/" + str(day3) + "/senate-section/article/" + recordPage + "-" + str(page)
                     # Requests the webpage of the record page
                     source2 = requests.get(record).text
                     soup2 = BeautifulSoup(source2, 'lxml')
@@ -129,8 +125,10 @@ while(repeat):
                     else:
                         lines2 = soup2.find('pre', class_='styled')
                         lines3 = str(lines2)
-                        if(word in lines3):
-                            print("Found in: " + record)
+                        for word in matchList:
+                            if(word in lines3):
+                                print(record)
+                                print(word)
                         page = page + 1
 
 #####################################################################
