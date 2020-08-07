@@ -3,20 +3,23 @@
 # for text searches on every congressional record.
 # Currently scrapes the html page of a given date,
 # Displays the list of congressional records for that date.
-# Last updated: 07.31.20, by Ali Yildirim
+# Last updated: 08.05.20, by Ali Yildirim
 
 #####################################################################
-# TODO: Separate the code into functions, clean the code
-# TODO: Save found pages to a file
+# TODO: Add GUI
+# TODO: Clean code
 #####################################################################
 
 from bs4 import BeautifulSoup
 import requests
 
-matchList = ["unanimous consent", "ask consent", "request consent", "ask unanimous consent", "request unanimous consent", "ask Unanimous Consent", "request Unanimous Consent", "without objection", "without objection, it is so ordered", "without objection it is so ordered", "without objection so ordered"]
+matchList = ["unanimous consent", "ask consent", "request consent", "ask unanimous consent", "request unanimous consent", "ask Unanimous Consent", "request Unanimous Consent", "without objection", "without objection", "it is so ordered", "without objection it is so ordered", "without objection so ordered"]
 
 # Whether or not a new search will be made
 repeat = True
+
+# Iterator for switching to a second batch
+batchIterator = 1
 
 #####################################################################
 # This section gets a date input from the user                      
@@ -70,14 +73,28 @@ while(repeat):
             print("No data found for " + str(year3) + "/" + str(day3) + "/" + str(month3), " skipping.\n")
             if(day3<31):
                 day3 = day3 + 1
+                batchIterator = batchIterator + 1
             else:
                 month3 = month3 + 1
                 day3 = 1
+                batchIterator = batchIterator + 1
             if(month3 == 12):
                 month3 = 1
                 year = year + 1
             found = True
-
+        
+#####################################################################
+# The program opens a new file for 7 day increments to write the results
+# This is done to prevent data loss or need to restart the process if
+# The program crashes on a long period
+#####################################################################
+        fileDate = str(day3) + "_" + str(month3) + "_" + str(year3) + ".csv"
+        if(batchIterator > 7):
+            batchIterator = 1
+            batchFile.close() 
+        
+        if(batchIterator == 1): 
+            batchFile = open(fileDate, "w+")
 #####################################################################
 # if "Page not Found" text is not seen on the html page,
 # prints the list of pages of congressional meetings that occured.
@@ -129,6 +146,7 @@ while(repeat):
                             if(word in lines3):
                                 print(record)
                                 print(word)
+                                batchFile.write(record + "," + word + "\n")
                         page = page + 1
 
 #####################################################################
@@ -137,10 +155,12 @@ while(repeat):
                
             if(day3<31):
                 day3 = day3 + 1
+                batchIterator = batchIterator + 1
             else:
                 month3 = month3 + 1
                 day3 = 1
-            if(month3 == 12):
+                batchIterator = batchIterator + 1
+            if(month3 == 13):
                 month3 = 1
                 year = year + 1
 
@@ -149,7 +169,8 @@ while(repeat):
 # Asks user if they want to repeat the search from beginning.
 # if not, ends program.
 #####################################################################
-    
+    batchFile.close()
+
     userChoice = input("\nWould you like to start over? (y/n): ")
     if(userChoice == 'y' or userChoice == 'Y'):
         repeat = True
