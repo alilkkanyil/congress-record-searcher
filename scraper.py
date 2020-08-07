@@ -106,14 +106,12 @@ while(repeat):
         pageList = []
         if(found == False):   
             iterator = 1
-            print("No.\tPage Number\n")
             for article in lines.find_all('td'):
                 if(iterator % 2 != 1):
                     pageList.append(str(article.text))
                 iterator = iterator + 1
             
             pageList = list(dict.fromkeys(pageList))
-            print(pageList)
 
             iterator = iterator - 1
             for x in range (len(pageList)):
@@ -144,8 +142,6 @@ while(repeat):
                         lines3 = str(lines2)
                         for word in matchList:
                             if(word in lines3):
-                                print(record)
-                                print(word)
                                 batchFile.write(record + "," + word + "\n")
                         page = page + 1
 
