@@ -14,3 +14,5 @@ Afterwards, provide the keyword to be searched. The program will display the rec
 The program provides prompts when necessary.
 
 Run with "python scrapper.py"
+
+The second script, "scraper2.py" will be used to further refine results. Currently it just prints the text from scraped pages. 
