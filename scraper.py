@@ -3,7 +3,7 @@
 # for text searches on every congressional record.
 # Currently scrapes the html page of a given date,
 # Displays the list of congressional records for that date.
-# Last updated: 08.05.20, by Ali Yildirim
+# Last updated: 08.14.20, by Ali Yildirim
 
 #####################################################################
 # TODO: Add GUI
@@ -18,8 +18,9 @@ matchList = ["unanimous consent", "ask consent", "request consent", "ask unanimo
 # Whether or not a new search will be made
 repeat = True
 
-# Iterator for switching to a second batch
+# Iterator for switching to a second batch, whether batch started or not
 batchIterator = 1
+batchStarted = False
 
 #####################################################################
 # This section gets a date input from the user                      
@@ -73,11 +74,13 @@ while(repeat):
             print("No data found for " + str(year3) + "/" + str(day3) + "/" + str(month3), " skipping.\n")
             if(day3<31):
                 day3 = day3 + 1
-                batchIterator = batchIterator + 1
+                if(batchStarted):
+                    batchIterator = batchIterator + 1
             else:
                 month3 = month3 + 1
                 day3 = 1
-                batchIterator = batchIterator + 1
+                if(batchStarted):
+                    batchIterator = batchIterator + 1
             if(month3 == 12):
                 month3 = 1
                 year = year + 1
@@ -89,12 +92,17 @@ while(repeat):
 # The program crashes on a long period
 #####################################################################
         fileDate = str(day3) + "_" + str(month3) + "_" + str(year3) + ".csv"
+        print(batchIterator)
         if(batchIterator > 7):
             batchIterator = 1
-            batchFile.close() 
+            batchFile.close()
+            print("File closed")
+            batchStarted = False 
         
-        if(batchIterator == 1): 
+        if(batchIterator == 1):
+            print("File opened")
             batchFile = open(fileDate, "w+")
+            batchStarted = True
 #####################################################################
 # if "Page not Found" text is not seen on the html page,
 # prints the list of pages of congressional meetings that occured.
@@ -142,7 +150,10 @@ while(repeat):
                         lines3 = str(lines2)
                         for word in matchList:
                             if(word in lines3):
-                                batchFile.write(record + "," + word + "\n")
+                                try:
+                                    batchFile.write(record + "," + word + "\n")
+                                except:
+                                    print("Error encountered. Continuing.")
                         page = page + 1
 
 #####################################################################
@@ -151,11 +162,13 @@ while(repeat):
                
             if(day3<31):
                 day3 = day3 + 1
-                batchIterator = batchIterator + 1
+                if(batchStarted):
+                    batchIterator = batchIterator + 1
             else:
                 month3 = month3 + 1
                 day3 = 1
-                batchIterator = batchIterator + 1
+                if(batchStarted):
+                    batchIterator = batchIterator + 1
             if(month3 == 13):
                 month3 = 1
                 year = year + 1
