@@ -81,7 +81,7 @@ while(repeat):
                 day3 = 1
                 if(batchStarted):
                     batchIterator = batchIterator + 1
-            if(month3 == 12):
+            if(month3 == 13):
                 month3 = 1
                 year = year + 1
             found = True
