@@ -178,8 +178,11 @@ while(repeat):
 # Asks user if they want to repeat the search from beginning.
 # if not, ends program.
 #####################################################################
-    batchFile.close()
-
+    try:
+        batchFile.close()
+    except:
+        print("")
+    
     userChoice = input("\nWould you like to start over? (y/n): ")
     if(userChoice == 'y' or userChoice == 'Y'):
         repeat = True
