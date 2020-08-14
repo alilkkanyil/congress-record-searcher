@@ -72,7 +72,7 @@ while(repeat):
 #####################################################################
         except AttributeError:
             print("No data found for " + str(year3) + "/" + str(day3) + "/" + str(month3), " skipping.\n")
-            if(day3<31):
+            if(day3<=31):
                 day3 = day3 + 1
                 if(batchStarted):
                     batchIterator = batchIterator + 1
@@ -160,7 +160,7 @@ while(repeat):
 # Iterates through the date until end date is reached
 #####################################################################
                
-            if(day3<31):
+            if(day3<=31):
                 day3 = day3 + 1
                 if(batchStarted):
                     batchIterator = batchIterator + 1
